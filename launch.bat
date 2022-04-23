@@ -1,5 +1,4 @@
 @echo off
-E:
-cd .dev/Anemoi
+cd app
+cmd /k python -m flask run
 @echo on
-python -m flask run
