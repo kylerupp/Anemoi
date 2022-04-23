@@ -6,6 +6,7 @@ CREATE TABLE `amenoi_db`.`id` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `mac` VARCHAR(16) NOT NULL,
     `time` DATETIME NOT NULL,
+    `online` BIT NOT NULL,
     PRIMARY KEY (`id`)
 );
 

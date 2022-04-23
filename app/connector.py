@@ -9,8 +9,8 @@ def get_connection():
 
 def create_endpoint(mac, cnx, cur):
     date = datetime.now()
-    q = "INSERT INTO `id` (`mac`, `time`) VALUES (%s, %s)"
-    cur.execute(q, (mac, date))
+    q = "INSERT INTO `id` (`mac`, `time`, `online`) VALUES (%s, %s, %s)"
+    cur.execute(q, (mac, date, 1))
     cnx.commit()
 
     q = "SELECT * FROM `id` WHERE `mac` = %s"
@@ -19,7 +19,8 @@ def create_endpoint(mac, cnx, cur):
     parse = {
         'id': result[0],
         'mac': result[1],
-        'time': result[2]
+        'time': result[2],
+        'online': result[3]
     }
     return parse
 
@@ -51,3 +52,41 @@ def update_location(mac, loc, cnx, cur):
         q = "INSERT INTO `location` (`mac, `location`) VALUES (%s, %s)"
         cur.execute(q, (mac, loc))
         cnx.commit()
+
+def get_status(mac, cnx, cur):
+    cur.execute("SELECT MAX(`log`) FROM `temp` WHERE `mac` = %s", (mac,))
+    result = cur.fetchone()
+    last_log = result[0]
+
+    cur.execute("SELECT * FROM `id` WHERE `mac` = %s", (mac,))
+    result = cur.fetchone()
+    if(result[3] == 1):
+        info = {
+            'up_time': str(datetime.now() - result[2]),
+            'start_time': str(result[2]),
+            'last_log': last_log,
+            'online': result[3]
+        }
+    else:
+        info = {
+            'up_time': str(datetime.now() - datetime.now()),
+            'start_time': str(result[2]),
+            'last_log': last_log,
+            'online': result[3]
+        }
+
+    return info
+
+def update_online(mac, online, cnx, cur):
+    cur.execute("UPDATE `id` SET `online` = %s WHERE `mac` = %s", (online, mac))
+    cnx.commit()
+
+    cur.execute("SELECT * FROM `id` WHERE `mac` = %s", (mac,))
+    result = cur.fetchone()
+    info = {
+        'id': result[0],
+        'mac': result[1],
+        'time': result[2],
+        'online': result[3]
+    }
+    return info

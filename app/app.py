@@ -48,3 +48,32 @@ def post_temp():
         cur)
     lcl_cnx.close()
     return jsonify({'temp': result})
+
+@app.route('/status/<mac>', methods = ['GET', 'POST'])
+def get_status(mac):
+    lcl_cnx = connector.get_connection()
+    cur = lcl_cnx.cursor()
+    if request.method == 'GET':
+        result = connector.get_status(mac, lcl_cnx, cur)
+        info = {
+            'mac': mac,
+            'up_time': result['up_time'],
+            'start_time': result['start_time'],
+            'server_time': datetime.now(),
+            'last_log': result['last_log'],
+            'online': result['online']
+        }
+
+    if request.method == 'POST':
+        result = connector.update_online(mac, 0, lcl_cnx, cur)
+        info = {
+            'id': result['id'],
+            'mac': result['mac'],
+            'time': result['time'],
+            'online': result['online']
+        }
+
+    lcl_cnx.close()
+    return info
+    
+    
