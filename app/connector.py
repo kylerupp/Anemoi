@@ -9,9 +9,8 @@ def get_connection():
 
 def create_endpoint(mac, cnx, cur):
     date = datetime.now()
-    format_date = date.strftime('%Y-%m-%d %H:%M:%S')
     q = "INSERT INTO `id` (`mac`, `time`) VALUES (%s, %s)"
-    cur.execute(q, (mac, format_date))
+    cur.execute(q, (mac, date))
     cnx.commit()
 
     q = "SELECT * FROM `id` WHERE `mac` = %s"
@@ -24,12 +23,22 @@ def create_endpoint(mac, cnx, cur):
     }
     return parse
 
-
-def create_entry(mac, temp, cnx, cur):
+def create_temp(mac, temp, log, cnx, cur):
     date = datetime.now()
-    q = "INSERT INTO `temp` (`mac`, `temp`, `time`) VALUES (%s, %s, DATE(%s))"
-    cur.execute(q ,(mac, temp, date))
+    q = "INSERT INTO `temp` (`mac`, `temp`, `log`, `time`) VALUES (%s, %s, %s, %s)"
+    cur.execute(q ,(mac, temp, log, date))
     cnx.commit()
+
+    q = "SELECT * FROM `temp` WHERE (`mac` = %s AND `log` = %s)"
+    cur.execute(q, (mac, log))
+    result = cur.fetchone()
+    parse = {
+        'mac': result[0],
+        'temp': result[1],
+        'log': result[2],
+        'time': result[3]
+    }
+    return parse
 
 def update_location(mac, loc, cnx, cur):
     cur.execute("SELECT * FROM `location` WHERE `mac`=%s", (mac,))
@@ -42,4 +51,3 @@ def update_location(mac, loc, cnx, cur):
         q = "INSERT INTO `location` (`mac, `location`) VALUES (%s, %s)"
         cur.execute(q, (mac, loc))
         cnx.commit()
-        

@@ -10,14 +10,15 @@ CREATE TABLE `amenoi_db`.`id` (
 );
 
 CREATE TABLE `amenoi_db`.`location` (
-    `mac` INT NOT NULL,
+    `mac` VARCHAR(16) NOT NULL,
     `location` VARCHAR(32),
     PRIMARY KEY (`mac`)
 );
 
 CREATE TABLE `amenoi_db`.`temp` (
-    `mac` INT NOT NULL,
+    `mac` VARCHAR(16) NOT NULL,
     `temp` INT NOT NULL,
+    `log` INT NOT NULL,
     `time` DATETIME NOT NULL,
-    PRIMARY KEY (`mac`,`time`)
+    PRIMARY KEY (`mac`,`log`)
 );
