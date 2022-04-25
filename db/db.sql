@@ -7,6 +7,7 @@ CREATE TABLE `amenoi_db`.`id` (
     `mac` VARCHAR(17) NOT NULL,
     `time` DATETIME NOT NULL,
     `online` BIT NOT NULL,
+    `last_online` DATETIME NOT NULL,
     PRIMARY KEY (`id`)
 );
 

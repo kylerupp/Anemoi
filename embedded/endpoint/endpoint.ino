@@ -1,22 +1,24 @@
+#include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
 
-ESP8266WiFiMulti wifiMulti;
+#define SERVER "wouldn't you want my ip?"
+#define SSID_NET "nice try"
+#define SSID_KEY "no pass here"
 
-String ssid = "haha you thought";
-String ssid_pass = "not a real password";
+HTTPClient http;
+WiFiClient client;
 
 void setup() {
   Serial.begin(115200);
   delay(10);
   Serial.println('\n');
 
-  wifiMulti.addAP(ssid, ssid_pass);
+  WiFi.begin(SSID_NET, SSID_KEY);
 
   Serial.println("Connecting ...");
-  int i = 0;
-  while(wifiMulti.run() != WL_CONNECTED) {
-    delay(1000);
+
+  while(WiFi.status() != WL_CONNECTED) {
+    delay(500);
     Serial.println('.');
   }
   Serial.println('\n');
@@ -25,9 +27,30 @@ void setup() {
   Serial.print("IP address:\t");
   Serial.println(WiFi.localIP());
 
+  //DONT FORGET TO CHANGE IP
+  http.begin(client, "http://" SERVER "/endpoint");
+  http.addHeader("Content-Type", "application/json");
+
+  Serial.println(WiFi.macAddress());
+  int httpCode = http.POST("{\"mac\":\"" + WiFi.macAddress() + "\"}");
+  String payload = http.getString();
+
+  Serial.println(httpCode);
+  Serial.println(payload);
+
+  http.end();
+
+  httpCode = http.POST("{\"mac\":\"" + WiFi.macAddress() + "\",\"temp\":\"0\",\"log\":\"13\"}");
+  payload = http.getString();
+  
+  Serial.println(httpCode);
+  Serial.println(payload);
+  
+  http.end();
+
+  ESP.deepSleep(15e6);
+  
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
 }

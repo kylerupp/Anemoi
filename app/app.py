@@ -61,7 +61,8 @@ def get_status(mac):
             'start_time': result['start_time'],
             'server_time': datetime.now(),
             'last_log': result['last_log'],
-            'online': result['online']
+            'online': result['online'],
+            'last_online': result['last_online']
         }
 
     if request.method == 'POST':
@@ -70,7 +71,8 @@ def get_status(mac):
             'id': result['id'],
             'mac': result['mac'],
             'time': result['time'],
-            'online': result['online']
+            'online': result['online'],
+            'last_online': result['last_online']
         }
 
     lcl_cnx.close()
