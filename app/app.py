@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, jsonify, request
+from flask import abort, Flask, jsonify, request
 from os import environ
 
 import connector
@@ -18,10 +18,26 @@ cnx = connector.create_connection(config)
 def home():
     return "Hello, World!"
 
-@app.route("/config", methods = ['GET'])
+@app.route("/time", methods = ['GET'])
 def get_config():
     time = datetime.now()
     return jsonify({'date': time})
+
+@app.route('/endpoint/<mac>', methods = ['GET', 'POST', 'PATCH'])
+def get_endpoint(mac):
+    lcl_cnx = connector.get_connection()
+    cur = lcl_cnx.cursor()
+    if request.method == 'GET':
+        result = connector.get_endpoint(mac, cur)
+        if(result == None):
+            lcl_cnx.close()
+            abort(404)
+    if request.method == 'POST':
+        result = connector.create_endpoint(mac, lcl_cnx, cur)
+    if request.method == 'PATCH':
+        result = connector.update_endpoint(mac, lcl_cnx, cur)
+    lcl_cnx.close()
+    return jsonify({'endpoint': result})
 
 @app.route('/endpoint', methods = ['POST'])
 def post_endpoint():
@@ -43,39 +59,7 @@ def post_temp():
     result = connector.create_temp(
         temp_info['mac'],
         temp_info['temp'],
-        temp_info['log'],
         lcl_cnx,
         cur)
     lcl_cnx.close()
-    return jsonify({'temp': result})
-
-@app.route('/status/<mac>', methods = ['GET', 'POST'])
-def get_status(mac):
-    lcl_cnx = connector.get_connection()
-    cur = lcl_cnx.cursor()
-    if request.method == 'GET':
-        result = connector.get_status(mac, lcl_cnx, cur)
-        info = {
-            'mac': mac,
-            'up_time': result['up_time'],
-            'start_time': result['start_time'],
-            'server_time': datetime.now(),
-            'last_log': result['last_log'],
-            'online': result['online'],
-            'last_online': result['last_online']
-        }
-
-    if request.method == 'POST':
-        result = connector.update_online(mac, 0, lcl_cnx, cur)
-        info = {
-            'id': result['id'],
-            'mac': result['mac'],
-            'time': result['time'],
-            'online': result['online'],
-            'last_online': result['last_online']
-        }
-
-    lcl_cnx.close()
-    return info
-    
-    
+    return jsonify({'temp': result})     
