@@ -3,9 +3,9 @@
 ## Goals:
 Important deliverables for this project.
 ### Backend
-[ ] create Flask Backend
-[ ] create sql database
-[ ] interface backend with sql database
+[X] create Flask Backend
+[X] create sql database
+[X] interface backend with sql database
 [ ] get config (time, rest tbd)
 [ ] get data (specify range of data, default one month)
 [ ] post data (single entry for one endpoint)

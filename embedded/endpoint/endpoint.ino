@@ -51,6 +51,12 @@ void setup() {
   }
 
   http.end();
+
+  http.begin(client, "http://" SERVER "/temp");
+  http.addHeader("Content-Type", "application/json");
+  Serial.println("Sending fake temperature data.");
+  http.POST("{\"mac\":\"" + mac + "\",\"temp\":\"0\"}");
+  http.end();
   Serial.println("Going to sleep for 15 seconds");
   // Make sure D0 is connected to RST for reboot
   ESP.deepSleep(5e6);

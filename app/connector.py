@@ -41,7 +41,7 @@ def create_endpoint(mac, cnx, cur):
 
 def create_temp(mac, temp, cnx, cur):
     date = datetime.now()
-    q = "INSERT INTO `temp` (`mac`, `temp`, `log`, `time`) VALUES (%s, %s, %s, %s)"
+    q = "INSERT INTO `temp` (`mac`, `temp`, `time`) VALUES (%s, %s, %s)"
     cur.execute(q ,(mac, temp, date))
     cnx.commit()
 
@@ -83,4 +83,3 @@ def update_endpoint(mac, cnx, cur):
         'last_online': result[2]
     }
     return parse
-    
