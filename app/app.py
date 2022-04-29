@@ -51,7 +51,6 @@ def get_endpoint_firmware(mac):
             abort(404)
     else:
         params = request.json
-        print(params)
     if request.method == 'POST':
         result = connector.create_endpoint_firmware(mac, params['firmware'], lcl_cnx, cur)
     if request.method == 'PATCH':

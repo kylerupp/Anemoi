@@ -67,11 +67,11 @@ def create_endpoint_firmware(mac, firmware, cnx, cur):
 def create_temp(mac, temp, cnx, cur):
     date = datetime.now()
     q = "INSERT INTO `temp` (`mac`, `temp`, `time`) VALUES (%s, %s, %s)"
-    cur.execute(q ,(mac, temp, date))
+    cur.execute(q ,(mac, temp, date.strftime("%Y-%m-%d %H:%M:%S")))
     cnx.commit()
 
     q = "SELECT * FROM `temp` WHERE (`mac` = %s AND `time` = %s)"
-    cur.execute(q, (mac, date))
+    cur.execute(q, (mac, date.strftime("%Y-%m-%d %H:%M:%S")))
     result = cur.fetchone()
     parse = {
         'mac': result[0],
