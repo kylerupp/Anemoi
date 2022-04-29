@@ -16,17 +16,18 @@ def get_endpoint(mac, cur):
         parse_result = {
             'mac': result[0][0],
             'time': result[0][1],
-            'last_online': result[0][2]
+            'last_online': result[0][2],
+            'firmware': result[0][3]
         }
         return parse_result
     else:
         return None
 
 # RESTapi POST Calls
-def create_endpoint(mac, cnx, cur):    
+def create_endpoint(mac, firmware, cnx, cur):    
     date = datetime.now()
-    q = "INSERT INTO `id` (`mac`, `time`, `last_online`) VALUES (%s, %s, %s)"
-    cur.execute(q, (mac, date, date))
+    q = "INSERT INTO `id` (`mac`, `time`, `last_online`, `firmware`) VALUES (%s, %s, %s, %s)"
+    cur.execute(q, (mac, date, date, firmware))
     cnx.commit()
 
     q = "SELECT * FROM `id` WHERE `mac` = %s"
@@ -35,7 +36,8 @@ def create_endpoint(mac, cnx, cur):
     parse = {
         'mac': result[0],
         'time': result[1],
-        'last_online': result[2]
+        'last_online': result[2],
+        'firmware': result[3]
     }
     return parse
 
@@ -68,10 +70,10 @@ def update_location(mac, loc, cnx, cur):
         cur.execute(q, (mac, loc))
         cnx.commit()
 
-def update_endpoint(mac, cnx, cur):
+def update_endpoint(mac, firmware, cnx, cur):
     date = datetime.now()
-    q = "UPDATE `id` SET `last_online` = %s WHERE `mac` = %s"
-    cur.execute(q, (date, mac))
+    q = "UPDATE `id` SET (`last_online` = %s AND `firmware`) = %s WHERE `mac` = %s"
+    cur.execute(q, (date, firmware, mac))
     cnx.commit()
 
     q = "SELECT * FROM `id` WHERE `mac` = %s"
@@ -80,6 +82,7 @@ def update_endpoint(mac, cnx, cur):
     parse = {
         'mac': result[0],
         'time': result[1],
-        'last_online': result[2]
+        'last_online': result[2],
+        'firmware': result[3]
     }
     return parse

@@ -33,9 +33,10 @@ def get_endpoint(mac):
             lcl_cnx.close()
             abort(404)
     if request.method == 'POST':
-        result = connector.create_endpoint(mac, lcl_cnx, cur)
+        params = request.json
+        result = connector.create_endpoint(mac, params['firmware'], lcl_cnx, cur)
     if request.method == 'PATCH':
-        result = connector.update_endpoint(mac, lcl_cnx, cur)
+        result = connector.update_endpoint(mac, params['firmware'], lcl_cnx, cur)
     lcl_cnx.close()
     return jsonify({'endpoint': result})
 
