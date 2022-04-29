@@ -59,15 +59,25 @@ def get_endpoint_firmware(mac):
     return jsonify({'endpoint': result})
 
 
-@app.route('/data', methods = ['POST'])
+@app.route('/data', methods = ['GET', 'POST'])
 def post_data():
-    data_info = request.json
     lcl_cnx = connector.get_connection()
     cur = lcl_cnx.cursor()
-    result = connector.create_data(
-        data_info['mac'],
-        data_info['temp'],
-        lcl_cnx,
-        cur)
+    if request.method == 'GET':
+        if(request.args.get('start') == None or request.args.get('end') == None):
+            lcl_cnx.close()
+            abort(400)
+        else:
+            result = connector.get_data(
+                request.args.get('start'),
+                request.args.get('end'),
+                cur)
+    if request.method == 'POST':
+        data_info = request.json
+        result = connector.create_data(
+            data_info['mac'],
+            data_info['temp'],
+            lcl_cnx,
+            cur)
     lcl_cnx.close()
     return jsonify({'data': result})     

@@ -33,6 +33,19 @@ def get_endpoint_firmware(mac, cur):
     else:
         return None
 
+def get_data(start, end, cur):
+    cur.execute("SELECT * FROM `data` WHERE `time` BETWEEN %s and %s", (start, end))
+    results = cur.fetchall()
+    parsed_results = []
+    for result in results:
+        parsed_result = {
+            'mac': result[0],
+            'temp': result[1],
+            'time': result[2]
+        }
+        parsed_results.append(parsed_result)
+    return parsed_results
+
 # RESTapi POST Calls
 def create_endpoint(mac, cnx, cur):    
     date = datetime.now()
