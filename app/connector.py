@@ -64,13 +64,13 @@ def create_endpoint_firmware(mac, firmware, cnx, cur):
     }
     return parse
 
-def create_temp(mac, temp, cnx, cur):
+def create_data(mac, temp, cnx, cur):
     date = datetime.now()
-    q = "INSERT INTO `temp` (`mac`, `temp`, `time`) VALUES (%s, %s, %s)"
+    q = "INSERT INTO `data` (`mac`, `temp`, `time`) VALUES (%s, %s, %s)"
     cur.execute(q ,(mac, temp, date.strftime("%Y-%m-%d %H:%M:%S")))
     cnx.commit()
 
-    q = "SELECT * FROM `temp` WHERE (`mac` = %s AND `time` = %s)"
+    q = "SELECT * FROM `data` WHERE (`mac` = %s AND `time` = %s)"
     cur.execute(q, (mac, date.strftime("%Y-%m-%d %H:%M:%S")))
     result = cur.fetchone()
     parse = {

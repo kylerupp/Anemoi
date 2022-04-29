@@ -59,15 +59,15 @@ def get_endpoint_firmware(mac):
     return jsonify({'endpoint': result})
 
 
-@app.route('/temp', methods = ['POST'])
-def post_temp():
-    temp_info = request.json
+@app.route('/data', methods = ['POST'])
+def post_data():
+    data_info = request.json
     lcl_cnx = connector.get_connection()
     cur = lcl_cnx.cursor()
-    result = connector.create_temp(
-        temp_info['mac'],
-        temp_info['temp'],
+    result = connector.create_data(
+        data_info['mac'],
+        data_info['temp'],
         lcl_cnx,
         cur)
     lcl_cnx.close()
-    return jsonify({'temp': result})     
+    return jsonify({'data': result})     

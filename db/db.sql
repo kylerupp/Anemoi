@@ -21,7 +21,7 @@ CREATE TABLE `amenoi_db`.`location` (
     PRIMARY KEY (`mac`)
 );
 
-CREATE TABLE `amenoi_db`.`temp` (
+CREATE TABLE `amenoi_db`.`data` (
     `mac` VARCHAR(17) NOT NULL,
     `temp` INT NOT NULL,
     `time` DATETIME NOT NULL,
