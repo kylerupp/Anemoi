@@ -6,6 +6,11 @@ CREATE TABLE `amenoi_db`.`id` (
     `mac` VARCHAR(17) NOT NULL,
     `time` DATETIME NOT NULL,
     `last_online` DATETIME NOT NULL,
+    PRIMARY KEY (`mac`)
+);
+
+CREATE TABLE `amenoi_db`.`firmware` (
+    `mac` VARCHAR(17) NOT NULL,
     `firmware` VARCHAR(16) NOT NULL,
     PRIMARY KEY (`mac`)
 );
